@@ -20,7 +20,7 @@ public class MemoryLeak {
 				System.out.println("Map size: " + map.size());
 				System.out.println("Free memory after count " + counter + " is " + getFreeMemory() + "MB");
 				sleep(1000);
-//				map.clear();
+//				map.clear(); 
 			}
 		}
 	}

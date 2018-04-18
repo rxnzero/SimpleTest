@@ -85,6 +85,6 @@ public class SocketClient {
      */
     public static void main(String[] args) throws Exception {
     	SocketClient client = new SocketClient();
-    	client.sendToServer("localhost", 8888, "hello touppper socket server !");
+    	client.sendToServer("localhost", 21004, "hello touppper socket server !");
     }
 }

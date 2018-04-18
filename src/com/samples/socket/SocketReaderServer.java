@@ -10,8 +10,8 @@ public class SocketReaderServer {
 	
 	
 	private static String getLength(byte[] message) {
-		String length = "00000";
-		length = String.format("%05d", message.length);
+		String length = "0000";
+		length = String.format("%04d", message.length);
 		return length;
 	}
 	
@@ -41,7 +41,7 @@ public class SocketReaderServer {
 	        private Socket socket;
 	        private int clientNumber;
 	        boolean isPermanent = false;
-	        int header_size = 5;
+	        int header_size = 4;
 	        
 	        public WorkThread(Socket socket, int clientNumber, boolean permanent) {
 	            this.socket = socket;
@@ -62,14 +62,15 @@ public class SocketReaderServer {
         	        while(isPermanent) {
 	         	       int read = is.read(lengthBytes);
 	         	      
-	        	        if(read == 5) {
+	        	        if(read == header_size) {
 	        	        	int requestSize = toLength(lengthBytes);
 	        	        	System.out.println(">> Length Size : " + requestSize );
 	  	                  
-	        	        	byte[] request = new byte[requestSize];
+	        	        	byte[] response = new byte[requestSize];
 	        	        	
-	        	        	int readBody = is.read(request);
-	        	        	System.out.println("request - length : " + readBody + "\n" + new String(request));	        	
+	        	        	int readBody = is.read(response);
+	        	        	
+	        	        	System.out.println(DumpUtil.getDumpMessage(response));	        	        		        	
 	        	        	
 	             	        // line.getBytes("utf-8")
 	//             	        byte[] msgBytes = (new String(request)).toUpperCase().getBytes();
@@ -102,5 +103,5 @@ public class SocketReaderServer {
 	            }
 	        }
 	    }
-
+	 	
 }

@@ -143,7 +143,8 @@ public class PublicKeyPrivateKeySample {
 	         
 	         String publicKeyModulus = publicSpec.getModulus().toString(16);
 	         String publicKeyExponent = publicSpec.getPublicExponent().toString(16);
-	         
+	         System.out.println("publicKeyModulus = " + publicKeyModulus);
+	         System.out.println("publicKeyExponent = " + publicKeyExponent);
 //	         String publicK = Base64.encodeBase64String(publicKey.getEncoded());
 //	         String privateK = Base64.encodeBase64String(privateKey.getEncoded());
 //	         byte[] publicBytes = Base64.decodeBase64(publicK);

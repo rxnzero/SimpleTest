@@ -42,7 +42,7 @@ public class StxSocketClient {
 	        
 	        byte[] sendLength = getLengthByte(msgBytes);
 	        
-	        os.write(ETX);
+	        os.write(STX);
 	        os.write(sendLength);
 	        
 	        os.write(msgBytes);
@@ -97,6 +97,15 @@ public class StxSocketClient {
      */
     public static void main(String[] args) throws Exception {
     	StxSocketClient client = new StxSocketClient();
-    	client.sendToServer("localhost", 52301, "0200100ABCDEGF한글ZZ"); // 52302
+//    	STX ETX LL(4) 는 출력하지 않음
+    	client.sendToServer("localhost", 52302, "00000000000000001002000010000000001000102018061800293300007100443"); // 
+    	
+//    	byte[] sourceBytes = "006500000000000000001002000010000000001000102018061800293300007100443".getBytes();
+//    	byte[] errorCode = "900".getBytes();
+//    	System.out.println(sourceBytes.length); 
+//   	 	if(sourceBytes.length > 62) {
+//        	System.arraycopy(errorCode, 0, sourceBytes, 59, 3);
+//        }	
+//   	 System.out.println(new String( sourceBytes) ); 
     }
 }

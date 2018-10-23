@@ -7,7 +7,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Random;
 
-public class SocketReaderServer {
+public class SocketSaServer {
 	
 	
 	private static String getLength(byte[] message) {
@@ -30,14 +30,57 @@ public class SocketReaderServer {
 		return length;
 	}
 	
-	public static void main(String[] args) throws Exception {
-		int port = 20000;
-        int clientNumber = 0;
+	public static void sendToServer(String ip, int port,  String message) {
 
-        if(args.length > 0) {
-        	port = Integer.parseInt(args[0]);
-        }
+    	Socket socket = null;
+        InputStream is = null;
+        OutputStream os = null;
         
+        byte[] lengthBytes = new byte[4];
+        try {
+	        socket = new Socket(ip,port);
+	        is = socket.getInputStream();
+	        os = socket.getOutputStream();
+	        
+	        
+	        // 한글일 경우에는 encoding 처리가 필요함
+	        // line.getBytes("utf-8")
+	        byte[] msgBytes = message.getBytes();
+	        
+	        byte[] sendLength = getLengthByte(msgBytes);
+	        
+	        os.write(sendLength);
+	        
+	        os.write(msgBytes);
+	        os.flush();
+	        System.out.println("sendToServer request - length header : " + new String(sendLength) + "\n" + message);
+	        
+	        Thread.sleep(5 * 1000);
+        }
+        catch(Exception ex) {	
+        	ex.printStackTrace();
+        }
+        finally {
+        	try {
+				is.close();
+			} catch (IOException e) {
+			}
+        	try {
+				os.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+        	try {
+				socket.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+        }
+    }
+	
+	public static void main(String[] args) throws Exception {
+		int port = 20347;
+        int clientNumber = 0;
         ServerSocket listener = new ServerSocket(port);
         try {
         	System.out.println("The capitalization server is running. port="+ port);
@@ -95,10 +138,7 @@ public class SocketReaderServer {
 	        	        	else {
 	        	        		responseStr = (new String(response)).toLowerCase();
 	        	        	}
-	             	        byte[] msgBytes = responseStr.getBytes();
-	             	        os.write(getLengthByte(msgBytes));
-	             	        os.write(msgBytes);
-	             	        os.flush();
+	        	        	sendToServer("localhost", 20348, responseStr);
 	        	        }
 	        	        else {
 	        	        	System.out.println("stop : read length field  - " + read);

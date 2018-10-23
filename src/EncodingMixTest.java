@@ -48,6 +48,8 @@ public class EncodingMixTest {
 		System.out.println("eucBytes : " + new String(eucBytes, "euc-kr") );
 		System.out.println("utfBytes : " + new String(utfBytes, "utf-8") );
 		
+		System.out.println("mixedBytes euc-kr: " + new String(mixedBytes, 0, eucBytes.length, "euc-kr") );
+		System.out.println("mixedBytes utf-8: " + new String(mixedBytes, eucBytes.length, utfBytes.length, "utf-8") );
 		
 	}
 

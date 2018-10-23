@@ -57,7 +57,9 @@ public class SocketClient {
 	        }
 	        else {
 	        	System.out.println("read length field failed - " + read);
-	        }	        
+	        }	 
+	        
+	        Thread.sleep(100 * 1000);
         }
         catch(Exception ex) {	
         	ex.printStackTrace();
@@ -85,6 +87,10 @@ public class SocketClient {
      */
     public static void main(String[] args) throws Exception {
     	SocketClient client = new SocketClient();
-    	client.sendToServer("localhost", 21004, "hello touppper socket server !");
+//    	client.sendToServer("localhost", 21004, "hello touppper socket server !");
+    	
+//    	for(int i=0; i< 20;i ++)
+    	client.sendToServer("localhost", 8001, "hello touppper socket server !");
+    	
     }
 }

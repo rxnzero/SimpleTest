@@ -22,7 +22,7 @@ public class SocketServer {
 	}
 	
 	public static void main(String[] args) throws Exception {
-		int port = 8888;
+		int port = 8080; // 8888
         int clientNumber = 0;
         ServerSocket listener = new ServerSocket(port);
         try {
@@ -64,17 +64,21 @@ public class SocketServer {
         	        	int readBody = is.read(request);
         	        	System.out.println("request - length : " + readBody + "\n" + new String(request));	        	
         	        	
+//        	        	Thread.sleep(100);
              	        // line.getBytes("utf-8")
              	        byte[] msgBytes = (new String(request)).toUpperCase().getBytes();
-             	        os.write(getLengthByte(msgBytes));
-             	        os.write(msgBytes);
+             	        
+             	        String length = getLength(msgBytes);
+             	        System.out.println("response - length : " + length + "\n" + new String(msgBytes));
+             	        os.write(length.getBytes());
+             	       os.write(msgBytes);
              	        os.flush();
         	        }
         	        else {
         	        	System.out.println("read length field failed - " + read);
         	        }
          	        
-         	        
+         	        Thread.sleep(1 * 1000); 
 	            } catch (Exception e) {
 	                e.printStackTrace();
 	            } finally {

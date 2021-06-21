@@ -31,7 +31,7 @@ public class SocketReaderServer {
 	}
 	
 	public static void main(String[] args) throws Exception {
-		int port = 20000;
+		int port = 8000;
         int clientNumber = 0;
 
         if(args.length > 0) {
@@ -56,6 +56,12 @@ public class SocketReaderServer {
 	        int header_size = 4;
 	        
 	        public WorkThread(Socket socket, int clientNumber, boolean permanent) {
+	        	System.out.println("New connection with client# " + clientNumber + " wait 100 secs");
+	        	try {
+					Thread.sleep(60 * 1000);
+				} catch (InterruptedException e) {
+					;
+				}
 	            this.socket = socket;
 	            this.clientNumber = clientNumber;
 	            this.isPermanent = permanent;

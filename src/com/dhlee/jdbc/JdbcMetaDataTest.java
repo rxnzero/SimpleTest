@@ -13,9 +13,9 @@ import java.sql.Statement;
 public class JdbcMetaDataTest {
 	
 	public static void main(String args[]) {
-		testInsertLob();
+//		testInsertLob();
 //		testMetaData();
-//		testRsMetaData();
+		testRsMetaData();
 //		testLimitSQL();
 	}
 	
@@ -39,8 +39,8 @@ public class JdbcMetaDataTest {
 //		sql = "SELECT * FROM EAI.TEST limit 1";
 //		sql = "SELECT * FROM EAI.COMPANY where 1 = 2";
 		sql = "SELECT * FROM EAI.LOBTEST";
-//		System.out.println(">> testRsMetaData MariaDB - "+ sql);
-//		testRsMetaData("MariaDB", sql);
+		System.out.println(">> testRsMetaData MariaDB - "+ sql);
+		testRsMetaData("MariaDB", sql);
 		
 //		sql = "SELECT * FROM EAI.LOBTEST where rownum = 1";
 		System.out.println(">> testRsMetaData Oracle - "+ sql);
@@ -204,7 +204,7 @@ public class JdbcMetaDataTest {
 		/*
 		 DROP TABLE LOBTEST;
 		CREATE TABLE LOBTEST (
-		  keyname     varchar(40) NOT NULL,
+		  keyname     char(10) NOT NULL,
 		  keyvalue    varchar(200) ,
 		  bindata BLOB 
 		); 

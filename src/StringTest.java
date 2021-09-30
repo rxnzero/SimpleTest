@@ -7,6 +7,7 @@ public class StringTest {
 	
 	
 	public static String extractLayoutName(String path) {
+		
 		String layoutName = null;
 		int sPos = 0;
 		int ePos = 0;
@@ -31,12 +32,17 @@ public class StringTest {
 		return layoutName;
 	}
 	
+	public static void spiltTest() {
+		String fileName = "abc.txt";
+		String[] temp = fileName.split("\\."); // fileName.split("[.]");
+    	String tableName = temp[0]; 
+    	System.out.println( fileName +"=> "+ tableName);
+	}
+
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		System.out.println( extractLayoutName("SRC_LAYOUT1.a.b.c" ));
 		System.out.println( extractLayoutName("max( SRC_LAYOUT2.a.b.c)") );
 		System.out.println( extractLayoutName("sub( max( SRC_LAYOUT3.a.b.c), 10, 5 )") );
-		
 	}
 
 }

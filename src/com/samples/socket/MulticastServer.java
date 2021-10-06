@@ -36,18 +36,22 @@ public class MulticastServer {
 			while (true) {
 				System.out.print("ют╥б : ");
 				String msg = reader.readLine();
-
 				if (msg == null) {
 					break;
 				}
-
 				packet = new DatagramPacket(msg.getBytes(), msg.getBytes().length, address, port);
-
 				socket.send(packet);
 			}
-
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+		finally {
+			if(socket != null) {
+				try { 
+					socket.close();
+				}
+				catch(Exception e) {}
+			}
 		}
 	}
 }

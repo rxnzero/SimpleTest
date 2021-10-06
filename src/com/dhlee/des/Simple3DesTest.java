@@ -6,7 +6,8 @@ import javax.crypto.spec.DESKeySpec;
 import javax.crypto.spec.DESedeKeySpec;
 	
 public class Simple3DesTest {
-
+	private static String ENCODE = "utf-8";
+	
 	public Simple3DesTest() {
 		// TODO Auto-generated constructor stub
 	}
@@ -85,9 +86,10 @@ public class Simple3DesTest {
         String instance = (key().length() == 24) ? "DESede/ECB/PKCS5Padding" : "DES/ECB/PKCS5Padding";
         javax.crypto.Cipher cipher = javax.crypto.Cipher.getInstance(instance);
         cipher.init(javax.crypto.Cipher.ENCRYPT_MODE, getKey());
+        
         String amalgam = ID;
 
-        byte[] inputBytes1 = amalgam.getBytes("UTF8");
+        byte[] inputBytes1 = amalgam.getBytes(ENCODE);
         byte[] outputBytes1 = cipher.doFinal(inputBytes1);
         sun.misc.BASE64Encoder encoder = new sun.misc.BASE64Encoder();
         String outputStr1 = encoder.encode(outputBytes1);
@@ -114,7 +116,7 @@ public class Simple3DesTest {
         byte[] inputBytes1 = decoder.decodeBuffer(codedID);
         byte[] outputBytes2 = cipher.doFinal(inputBytes1);
 
-        String strResult = new String(outputBytes2, "UTF8");
+        String strResult = new String(outputBytes2, ENCODE);
         return strResult;
     }
 }

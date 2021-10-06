@@ -17,10 +17,10 @@ public class MulticastClient {
 		MulticastSocket socket = null;
 		String ip = "224.128.1.5";
 		int port = 9006;
-		InetAddress address =  null;
+		InetAddress address = null;
 		try {
 			socket = new MulticastSocket(port);
-			System.out.println("클라이언트 생성. ip="+ ip +", port="+port);
+			System.out.println("클라이언트 생성. ip=" + ip + ", port=" + port);
 
 			// 그룹에 조인(라우터가 보냄)
 			address = InetAddress.getByName(ip); // 멀티 캐스트를 위한 아이피 설정
@@ -42,14 +42,13 @@ public class MulticastClient {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
-		finally {
-			if(socket != null && address != null) {
+		} finally {
+			if (socket != null && address != null) {
 				try {
 					socket.leaveGroup(address);
 					socket.close();
+				} catch (IOException e) {
 				}
-				catch(IOException e) {}
 			}
 		}
 	}

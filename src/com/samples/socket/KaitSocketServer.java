@@ -20,7 +20,7 @@ public class KaitSocketServer {
 		try {
 			// 서버 생성
 			serverSocket = new ServerSocket(port);
-			System.out.println("START port="+ port);
+			System.out.println("START port=" + port);
 			// client 접속 accept
 			socket = serverSocket.accept();
 			// client가 보낸 데이터 출력
@@ -38,15 +38,15 @@ public class KaitSocketServer {
 			Thread.sleep(1 * 1000);
 			bufWriter.write("123456789\n");
 			bufWriter.flush();
-			
+
 			Thread.sleep(1 * 1000);
 			bufWriter.write("123456789\n");
 			bufWriter.flush();
-			
+
 			Thread.sleep(1 * 1000);
 			bufWriter.write("123456789\n");
 			bufWriter.flush();
-			
+
 			Thread.sleep(1 * 1000);
 			bufWriter.write("123456789\n");
 			bufWriter.flush();
@@ -58,16 +58,31 @@ public class KaitSocketServer {
 			System.out.println("END...");
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
-		finally {
-			if(in != null)
-				try { in.close(); } catch (IOException e) { e.printStackTrace(); }
-			if(out != null) 
-				try { out.close(); } catch (IOException e) { e.printStackTrace(); }
-			if(socket != null) 
-				try { socket.close(); } catch (IOException e) { e.printStackTrace(); }
-			if(serverSocket != null) 
-				try { serverSocket.close(); } catch (IOException e) { e.printStackTrace(); }
+		} finally {
+			if (in != null)
+				try {
+					in.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			if (out != null)
+				try {
+					out.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			if (socket != null)
+				try {
+					socket.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			if (serverSocket != null)
+				try {
+					serverSocket.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 		}
 	}
 }

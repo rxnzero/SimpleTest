@@ -5,92 +5,89 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
-public class SocketClient {    
+public class SocketClient {
 	private String getLength(byte[] message) {
 		String length = "0000";
 		length = String.format("%04d", message.length);
 		return length;
 	}
-	
+
 	private byte[] getLengthByte(byte[] message) {
 		return getLength(message).getBytes();
 	}
-	
-	public int toLength(byte[] length) {
-		return Integer.parseInt( (new String(length)).trim() );
-	}
-	
-    public void sendToServer(String ip, int port,  String message) {
 
-    	Socket socket = null;
-        InputStream is = null;
-        OutputStream os = null;
-        
-        byte[] lengthBytes = new byte[4];
-        try {
-	        socket = new Socket(ip,port);
-	        is = socket.getInputStream();
-	        os = socket.getOutputStream();
-	        
-	        
-	        // 한글일 경우에는 encoding 처리가 필요함
-	        // line.getBytes("utf-8")
-	        byte[] msgBytes = message.getBytes();
-	        
-	        byte[] sendLength = getLengthByte(msgBytes);
-	        
-	        os.write(sendLength);
-	        
-	        os.write(msgBytes);
-	        os.flush();
-	        System.out.println("request - length header : " + new String(sendLength) + "\n" + message);
-	        
-	        int read = is.read(lengthBytes);
-	        
-	        if(read == 4) {
-	        	int responseSize = toLength(lengthBytes);
-	        	
-	        	byte[] response = new byte[responseSize];
-	        	
-	        	int readBody = is.read(response);
-	        	System.out.println("response - length : " + readBody + "\n" + new String(response));	        	
-	        }
-	        else {
-	        	System.out.println("read length field failed - " + read);
-	        }	 
-	        
-	        Thread.sleep(100 * 1000);
-        }
-        catch(Exception ex) {	
-        	ex.printStackTrace();
-        }
-        finally {
-        	try {
+	public int toLength(byte[] length) {
+		return Integer.parseInt((new String(length)).trim());
+	}
+
+	public void sendToServer(String ip, int port, String message) {
+
+		Socket socket = null;
+		InputStream is = null;
+		OutputStream os = null;
+
+		byte[] lengthBytes = new byte[4];
+		try {
+			socket = new Socket(ip, port);
+			is = socket.getInputStream();
+			os = socket.getOutputStream();
+
+			// 한글일 경우에는 encoding 처리가 필요함
+			// line.getBytes("utf-8")
+			byte[] msgBytes = message.getBytes();
+
+			byte[] sendLength = getLengthByte(msgBytes);
+
+			os.write(sendLength);
+
+			os.write(msgBytes);
+			os.flush();
+			System.out.println("request - length header : " + new String(sendLength) + "\n" + message);
+
+			int read = is.read(lengthBytes);
+
+			if (read == 4) {
+				int responseSize = toLength(lengthBytes);
+
+				byte[] response = new byte[responseSize];
+
+				int readBody = is.read(response);
+				System.out.println("response - length : " + readBody + "\n" + new String(response));
+			} else {
+				System.out.println("read length field failed - " + read);
+			}
+
+			Thread.sleep(100 * 1000);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			try {
 				is.close();
 			} catch (IOException e) {
+				e.printStackTrace();
 			}
-        	try {
+			try {
 				os.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-        	try {
+			try {
 				socket.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-        }
-    }
+		}
+	}
 
-    /**
-     * Runs the client application.
-     */
-    public static void main(String[] args) throws Exception {
-    	SocketClient client = new SocketClient();
+	/**
+	 * Runs the client application.
+	 */
+	public static void main(String[] args) throws Exception {
+		SocketClient client = new SocketClient();
 //    	client.sendToServer("localhost", 21004, "hello touppper socket server !");
-    	
+
 //    	for(int i=0; i< 20;i ++)
-    	client.sendToServer("localhost", 8001, "hello touppper socket server !");
-    	
-    }
+		client.sendToServer("localhost", 8001, "hello touppper socket server !");
+
+	}
 }

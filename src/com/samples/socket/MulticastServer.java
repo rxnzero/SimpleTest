@@ -21,7 +21,7 @@ public class MulticastServer {
 		int port = 9006;
 		try {
 			socket = new MulticastSocket();
-			System.out.println("辑滚 积己 己傍. ip="+ ip +", port="+port);
+			System.out.println("辑滚 积己 己傍. ip=" + ip + ", port=" + port);
 
 			BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
@@ -44,13 +44,12 @@ public class MulticastServer {
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
-		finally {
-			if(socket != null) {
-				try { 
+		} finally {
+			if (socket != null) {
+				try {
 					socket.close();
+				} catch (Exception e) {
 				}
-				catch(Exception e) {}
 			}
 		}
 	}

@@ -11,54 +11,43 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class JdbcMetaDataTest {
-	
 	public static void main(String args[]) {
-//		testInsertLob();
-//		testMetaData();
-		testRsMetaData();
-//		testLimitSQL();
-	}
-	
-	public static void testInsertLob() {
 		try {
-			testInsertBlob("Oracle");
-			testInsertBlob("MariaDB");
+			String tableName = "APITABLELOG"; //"LOBTEST";
+			System.out.println(">> testMetaData MariaDB - "+ tableName);
+			testMetaData("MariaDB", "EAI", tableName);
+			System.out.println(">> testMetaData Oracle - "+ tableName);
+			testMetaData("Oracle", "EAI", tableName);
+			
+			String sql = null; 
+			
+//			sql = "SELECT * FROM EAI.TEST limit 1";
+//			sql = "SELECT * FROM EAI.COMPANY where 1 = 2";
+//			sql = "SELECT * FROM EAI.LOBTEST";
+			sql = "SELECT * FROM EAI.APITABLELOG  where 1 = 2";
+			System.out.println(">> testRsMetaData MariaDB - "+ sql);
+			testRsMetaData("MariaDB", sql);
+			
+//			sql = "SELECT * FROM EAI.LOBTEST where rownum = 1";
+			System.out.println(">> testRsMetaData Oracle - "+ sql);
+			testRsMetaData("Oracle", sql);
+//			testInsertOracleBlob();
+			
+//			String sql =  "SELECT * FROM apisvcparams ";
+//			System.out.println(sql +"\n=> " +getOracleLimitQuery(sql));
+//			
+//			sql =  "SELECT * FROM apisvcparams where SERVICEID like 'ODA%'";
+//			System.out.println(sql +"\n=> " +getOracleLimitQuery(sql));
+//			
+//			sql =  "SELECT * FROM apisvcparams where SERVICEID like 'ODA%'\norder by 1";
+//			System.out.println(sql +"\n=> " +getOracleLimitQuery(sql));
+//			
+//			sql =  "SELECT * FROM apisvcparams order by 1";
+//			System.out.println(sql +"\n=> " +getOracleLimitQuery(sql));
 		}
 		catch(Exception ex) {
 			ex.printStackTrace();
 		}
-	}
-
-	public static void testMetaData() {
-		testMetaData("MariaDB", "EAI", "LOBTEST");
-		testMetaData("Oracle", "EAI", "LOBTEST");
-	}
-	
-	public static void testRsMetaData() { 
-		String sql = null; 
-//		sql = "SELECT * FROM EAI.TEST limit 1";
-//		sql = "SELECT * FROM EAI.COMPANY where 1 = 2";
-		sql = "SELECT * FROM EAI.LOBTEST";
-		System.out.println(">> testRsMetaData MariaDB - "+ sql);
-		testRsMetaData("MariaDB", sql);
-		
-//		sql = "SELECT * FROM EAI.LOBTEST where rownum = 1";
-		System.out.println(">> testRsMetaData Oracle - "+ sql);
-		testRsMetaData("Oracle", sql);
-	}
-	
-	public static void testLimitSQL() {
-			String sql =  "SELECT * FROM apisvcparams ";
-			System.out.println(sql +"\n=> " +getOracleLimitQuery(sql));
-			
-			sql =  "SELECT * FROM apisvcparams where SERVICEID like 'ODA%'";
-			System.out.println(sql +"\n=> " +getOracleLimitQuery(sql));
-			
-			sql =  "SELECT * FROM apisvcparams where SERVICEID like 'ODA%'\norder by 1";
-			System.out.println(sql +"\n=> " +getOracleLimitQuery(sql));
-			
-			sql =  "SELECT * FROM apisvcparams order by 1";
-			System.out.println(sql +"\n=> " +getOracleLimitQuery(sql));
 	}
 	
 	public static String getOracleLimitQuery(String sql) {
@@ -88,6 +77,7 @@ public class JdbcMetaDataTest {
 	public static void testMetaData(String dbType, String owner, String tableName) {		
 		Connection con = null;
 		ResultSet columns = null;
+		ResultSet pks = null;
 		String url = null;
 		String user = null;
 		String userpass = null;
@@ -117,14 +107,34 @@ public class JdbcMetaDataTest {
 			System.out.println("databaseProductName: " + databaseProductName);
 			columns = metaData.getColumns(null, owner, tableName, null);
 			while (columns.next()) {
-				System.out.print("Column name and size: " + columns.getString("COLUMN_NAME"));
-				System.out.print("(" + columns.getInt("COLUMN_SIZE") + ")");
+				System.out.print("COLUMN_NAME: " + columns.getString("COLUMN_NAME"));
+				System.out.print("COLUMN_SIZE (" + columns.getInt("COLUMN_SIZE") + ")");
 				System.out.println(" ");
-				System.out.println("Ordinal position: " + columns.getInt("ORDINAL_POSITION"));
-				System.out.println("Catalog: " + columns.getString("TABLE_CAT"));
-				System.out.println("Data type (integer value): " + columns.getInt("DATA_TYPE"));
-				System.out.println("Data type name: " + columns.getString("TYPE_NAME"));
+//				System.out.println("Ordinal position: " + columns.getInt("ORDINAL_POSITION"));
+//				System.out.println("Catalog: " + columns.getString("TABLE_CAT"));
+//				System.out.println("DATA_TYPE (integer value): " + columns.getInt("DATA_TYPE"));
+				System.out.println("TABLE_NAME: " + columns.getString("TABLE_NAME"));
+				System.out.println("TYPE_NAME: " + columns.getString("TYPE_NAME"));
+				System.out.println("NULLABLE: " + columns.getString("NULLABLE"));
+				System.out.println("REMARKS: " + columns.getString("REMARKS"));
 				System.out.println(" ");
+			}
+			System.out.println(">> owner="+owner);
+			System.out.println(">> tableName="+tableName);
+			pks = metaData.getPrimaryKeys(null, owner, tableName);
+			int pos = 1;
+			while (pks.next()) {
+				System.out.print("PrimaryKey Column["+pos+"] name : " + pks.getString("COLUMN_NAME"));
+				System.out.println(" ");
+				pos++;
+			}
+			
+			pos = 1;
+			pks = metaData.getIndexInfo(null, owner, tableName, true, true);
+			while (pks.next()) {
+				System.out.print("Unique Index Column["+pos+"] name : " + pks.getString("COLUMN_NAME"));
+				System.out.println(" ");
+				pos++;
 			}
 		}
 		catch(SQLException e) {
@@ -133,6 +143,9 @@ public class JdbcMetaDataTest {
 		finally {
 			if(columns != null) {
 				try { columns.close(); } catch(SQLException ex) {}
+			}
+			if(pks != null) {
+				try { pks.close(); } catch(SQLException ex) {}
 			}
 			if(con != null) {
 				try { con.close(); } catch(SQLException ex) {}
@@ -144,9 +157,14 @@ public class JdbcMetaDataTest {
 		Connection con = null;
 		Statement st = null;
 		ResultSet rs = null;
+		ResultSet pks = null;
 		String url = null;
 		String user = null;
 		String userpass = null;
+		
+		String owner = null;
+		String tableName = null;
+		
 		try {
 			if(dbType != null) dbType = dbType.toUpperCase();
 			if("ORACLE".equals(dbType)) {
@@ -180,9 +198,43 @@ public class JdbcMetaDataTest {
 				sb.append("ColumnLabel=").append(md.getColumnLabel(i));
 				sb.append(", ColumnType=").append(md.getColumnType(i));
 				sb.append(", ColumnTypeName=").append(md.getColumnTypeName(i));
+				sb.append(", isNullable=").append(md.isNullable(i));
 				System.out.println(sb.toString());
-				sb.setLength(0);			
+				sb.setLength(0);
+				if(i==1) {
+					owner = md.getSchemaName(i);
+					System.out.println(">> getSchemaName="+owner);
+					owner = md.getCatalogName(i);
+					System.out.println(">> getCatalogName="+owner);
+					tableName = md.getTableName(i);
+					System.out.println(">> owner="+owner);
+					System.out.println(">> tableName="+tableName);
+					
+				}
+			}	
+			
+//			System.out.println(">> owner="+owner);
+//			System.out.println(">> tableName="+tableName);
+//			owner = "EAI";
+//			tableName = "APITABLELOG";
+	
+			DatabaseMetaData dbMetaData = con.getMetaData();
+			pks = dbMetaData.getPrimaryKeys(null, owner, tableName);
+			int pos = 1;
+			while (pks.next()) {
+				System.out.print("PrimaryKey Column["+pos+"] name : " + pks.getString("COLUMN_NAME"));
+				System.out.println(" ");
+				pos++;
 			}
+			
+			pos = 1;
+			pks = dbMetaData.getIndexInfo(null, owner, tableName, true, true);
+			while (pks.next()) {
+				System.out.print("Unique Index Column["+pos+"] name : " + pks.getString("COLUMN_NAME"));
+				System.out.println(" ");
+				pos++;
+			}
+			
 		}
 		catch(SQLException e) {
 			e.printStackTrace();
@@ -200,65 +252,20 @@ public class JdbcMetaDataTest {
 		}
 	}
 	
-	public static void testInsertBlob(String dbType) throws SQLException {
-		/*
-		 DROP TABLE LOBTEST;
-		CREATE TABLE LOBTEST (
-		  keyname     char(10) NOT NULL,
-		  keyvalue    varchar(200) ,
-		  bindata BLOB 
-		); 
-		*/
-		Connection con = null;
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-		String url = null;
-		String user = null;
-		String userpass = null;
-		try {
-			if(dbType != null) dbType = dbType.toUpperCase();
-			if("ORACLE".equals(dbType)) {
-				DriverManager.registerDriver(new oracle.jdbc.OracleDriver());
-				url = "jdbc:oracle:thin:@localhost:1521:XE";
-				user = "eai";
-				userpass = "eaiadmin";
-			}
-			else if("MARIADB".equals(dbType)) {
-				DriverManager.registerDriver(new org.mariadb.jdbc.Driver());
-				url = "jdbc:mariadb://localhost:3306/eai?characterEncoding=euckr";
-				user = "eai";
-				userpass = "eaiadmin";
-			}
-			else {
-				System.out.println("unsupported dbType = " + dbType);
-				return;
-			}
-			
-			con = DriverManager.getConnection(url, user, userpass);
-			System.out.println("Connection established......");
-			String sql = "insert into EAI.LOBTEST(keyname, keyvalue, bindata) values ( ?, ?, ?)";
-			ps = con.prepareStatement(sql);
-			byte[] content = "12345".getBytes();		
-			ps.setString(1, "test");
-			ps.setString(2, "blob 입력");
-			ps.setBlob(3, new ByteArrayInputStream(content), content.length);
-			int count = ps.executeUpdate();
-			System.out.println("inserted - " + count);
-		} 
-		catch(SQLException e) {
-			e.printStackTrace();
-		} 
-		finally {
-			if(rs != null) {
-				try { rs.close(); } catch(SQLException ex) {}
-			}
-			if(ps != null) {
-				try { ps.close(); } catch(SQLException ex) {}
-			}
-			if(con != null) {
-				try { con.close(); } catch(SQLException ex) {}
-			}
-		}
+	public static void testInsertOracleBlob() throws SQLException {
+		// Registering the Driver
+		DriverManager.registerDriver(new oracle.jdbc.OracleDriver());
+		// Getting the connection
+		String url = "jdbc:oracle:thin:@localhost:1521:XE";
+		Connection con = DriverManager.getConnection(url, "eai", "eaiadmin");
+		System.out.println("Connection established......");
+		String sql = "insert into EAI.LOBTEST(keyname, keyvalue, bindata) values ( ?, ?, ?)";
+		PreparedStatement ps = con.prepareStatement(sql);
+		byte[] content = "12345".getBytes();		
+		ps.setString(1, "test");
+		ps.setString(2, "blob 입력");
+		ps.setBlob(3, new ByteArrayInputStream(content), content.length);
+		int count = ps.executeUpdate();
+		
 	}
 }
-

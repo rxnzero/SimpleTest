@@ -3,6 +3,7 @@ package com.dhlee.jdbc;
 public class ColumnInfo {
 	private String columnName;
 	private String dataTypeName;
+	private String remarks;
 	private int columnSize;
 	private boolean nullable;
 	private boolean isPrimaryKey;
@@ -11,20 +12,22 @@ public class ColumnInfo {
 
 	}
 
-	public ColumnInfo(String columnName, String dataTypeName, int columnSize, boolean nullable,
+	public ColumnInfo(String columnName, String dataTypeName, String remarks, int columnSize, boolean nullable,
 			boolean isPrimaryKey) {
 		super();
 		this.columnName = columnName;
 		this.dataTypeName = dataTypeName;
+		this.remarks = remarks;
 		this.columnSize = columnSize;
 		this.nullable = nullable;
 		this.isPrimaryKey = isPrimaryKey;
 	}
 	
-	public ColumnInfo(String columnName, String dataTypeName, int columnSize, boolean nullable) {
+	public ColumnInfo(String columnName, String dataTypeName, String remarks, int columnSize, boolean nullable) {
 		super();
 		this.columnName = columnName;
 		this.dataTypeName = dataTypeName;
+		this.remarks = remarks;
 		this.columnSize = columnSize;
 		this.nullable = nullable;
 	}
@@ -43,6 +46,14 @@ public class ColumnInfo {
 
 	public void setDataTypeName(String dataTypeName) {
 		this.dataTypeName = dataTypeName;
+	}
+
+	public String getRemarks() {
+		return remarks;
+	}
+
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
 	}
 
 	public int getColumnSize() {
@@ -71,7 +82,7 @@ public class ColumnInfo {
 
 	@Override
 	public String toString() {
-		return "ColumnInfo [columnName=" + columnName + ", dataTypeName=" + dataTypeName + ", columnSize=" + columnSize
+		return "ColumnInfo [columnName=" + columnName + ", remarks=" + remarks + ", dataTypeName=" + dataTypeName + ", columnSize=" + columnSize
 				+ ", nullable=" + nullable + ", isPrimaryKey=" + isPrimaryKey + "]";
 	}
 	

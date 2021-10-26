@@ -8,13 +8,16 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
-import java.util.LinkedList;	
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Properties;
+
+import oracle.jdbc.driver.OracleConnection;
 
 public class JdbcTableInfo {
 	public static void main(String args[]) {
 		try {
-			String tableName = "APITABLELOG"; //"LOBTEST";
+			String tableName = "APITABLE"; //"APITABLE"; //"LOBTEST";
 			System.out.println("<< MariaDB >>");
 			System.out.println(">> getTableInfo - "+ tableName);
 			List cols = getTableInfo("MariaDB", "EAI", tableName);
@@ -57,18 +60,26 @@ public class JdbcTableInfo {
 				url = "jdbc:oracle:thin:@localhost:1521:XE";
 				user = "eai";
 				userpass = "eaiadmin";
+				Properties prop = new Properties ();
+				prop.setProperty("user", user);
+				prop.setProperty("password", userpass);
+				prop.setProperty("remarksReporting", "true");
+				con = DriverManager.getConnection(url, prop);
+//				OracleConnection oraCon = (OracleConnection)con;
+//				oraCon.setRemarksReporting(true);				
 			}
 			else if("MARIADB".equals(dbType)) {
 				DriverManager.registerDriver(new org.mariadb.jdbc.Driver());
 				url = "jdbc:mariadb://localhost:3306/eai?characterEncoding=euckr";
 				user = "eai";
 				userpass = "eaiadmin";
+				con = DriverManager.getConnection(url, user, userpass);
 			}
 			else {
 				System.out.println("unsupported dbType = " + dbType);
 				return null;
 			}
-			con = DriverManager.getConnection(url, user, userpass);
+
 			DatabaseMetaData metaData = con.getMetaData();
 			String databaseProductName = metaData.getDatabaseProductName();
 			System.out.println("databaseProductName: " + databaseProductName);
@@ -95,6 +106,7 @@ public class JdbcTableInfo {
 			while (columns.next()) {
 				ColumnInfo col = new ColumnInfo();
 				col.setColumnName(columns.getString("COLUMN_NAME"));
+				col.setRemarks(columns.getString("REMARKS"));
 				col.setDataTypeName(columns.getString("TYPE_NAME"));
 				col.setColumnSize(columns.getInt("COLUMN_SIZE"));
 				if("1".equals(columns.getString("NULLABLE"))) {
@@ -189,6 +201,7 @@ public class JdbcTableInfo {
 			for (int i=1; i<=md.getColumnCount(); i++) {
 				ColumnInfo col = new ColumnInfo();
 				col.setColumnName(md.getColumnLabel(i));
+//				col.setRemarks(md.getC);
 				col.setDataTypeName(md.getColumnTypeName(i));
 				col.setColumnSize(md.getScale(i));
 				if( 1 == md.isNullable(i) ) {

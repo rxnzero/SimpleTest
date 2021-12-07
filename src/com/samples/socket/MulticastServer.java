@@ -25,7 +25,7 @@ public class MulticastServer {
 
 			BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
-			// IPv4 아래의 내용은 이전의 포스팅을 통해 설명 해두었음.
+			// IPv4 
 			// A Class : 0000 (0000) => 0.0.0.0 ~ 127.255.255.255
 			// B Class : 1000 (0000) => 128.0.0.0 ~ 191.255.255.255
 			// C Class : 1100 (0000) => 192.0.0.0 ~ 223.255.255.255

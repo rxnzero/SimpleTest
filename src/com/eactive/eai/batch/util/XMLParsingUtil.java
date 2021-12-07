@@ -121,7 +121,8 @@ public class XMLParsingUtil {
             int e_idx = xmlMessage.indexOf(eTag);
             if(s_idx == -1 || e_idx == -1) {
                 return "";
-            }
+            }  
+         
             else {
                 return xmlMessage.substring(s_idx+sTag.length(), e_idx);
             }

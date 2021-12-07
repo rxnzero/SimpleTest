@@ -17,7 +17,7 @@ import oracle.jdbc.driver.OracleConnection;
 public class JdbcTableInfo {
 	public static void main(String args[]) {
 		try {
-			String tableName = "APITABLE"; //"APITABLE"; //"LOBTEST";
+			String tableName = "APITABLE"; // "OTRCPRINVSTMNTSTTUS"; //"APITABLE"; //"APITABLE"; //"LOBTEST";
 			System.out.println("<< MariaDB >>");
 			System.out.println(">> getTableInfo - "+ tableName);
 			List cols = getTableInfo("MariaDB", "EAI", tableName);
@@ -27,10 +27,10 @@ public class JdbcTableInfo {
 			printColumnList(cols);
 			System.out.println("<< Oracle >>");
 			System.out.println(">> getTableInfo - "+ tableName);
-			cols = getTableInfo("Oracle", "EAI", tableName);
+			cols = getTableInfo("Oracle", "IIB", tableName);
 			printColumnList(cols);
 			System.out.println(">> getTableInfoWithRs - "+ tableName);
-			cols = getTableInfoWithRs("Oracle", "EAI", tableName);
+			cols = getTableInfoWithRs("Oracle", "IIB", tableName);
 			printColumnList(cols);
 		}
 		catch(Exception ex) {
@@ -57,9 +57,14 @@ public class JdbcTableInfo {
 			if(dbType != null) dbType = dbType.toUpperCase();
 			if("ORACLE".equals(dbType)) {
 				DriverManager.registerDriver(new oracle.jdbc.OracleDriver());
-				url = "jdbc:oracle:thin:@localhost:1521:XE";
-				user = "eai";
-				userpass = "eaiadmin";
+//				url = "jdbc:oracle:thin:@localhost:1521:XE";
+//				user = "eai";
+//				userpass = "eaiadmin";
+				
+				url = "jdbc:oracle:thin:@192.168.10.91:1521/xe";
+				user = "IIB";
+				userpass = "IIB";
+
 				Properties prop = new Properties ();
 				prop.setProperty("user", user);
 				prop.setProperty("password", userpass);
@@ -155,9 +160,12 @@ public class JdbcTableInfo {
 			if(dbType != null) dbType = dbType.toUpperCase();
 			if("ORACLE".equals(dbType)) {
 				DriverManager.registerDriver(new oracle.jdbc.OracleDriver());
-				url = "jdbc:oracle:thin:@localhost:1521:XE";
-				user = "eai";
-				userpass = "eaiadmin";
+//				url = "jdbc:oracle:thin:@localhost:1521:XE";
+//				user = "eai";
+//				userpass = "eaiadmin";
+				url = "jdbc:oracle:thin:@192.168.10.91:1521/xe";
+				user = "IIB";
+				userpass = "IIB";
 			}
 			else if("MARIADB".equals(dbType)) {
 				DriverManager.registerDriver(new org.mariadb.jdbc.Driver());

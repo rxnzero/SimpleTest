@@ -16,29 +16,44 @@ public class SimpleSocketServer {
 		Socket socket = null;
 		InputStream in = null;
 		OutputStream out = null;
+		BufferedReader bufReader = null;
+		BufferedWriter bufWriter = null;
+		boolean sendResponse = false;
 		try {
 			// 서버 생성
-			serverSocket = new ServerSocket(20001);
+			serverSocket = new ServerSocket(43001);
 			// client 접속 accept
 			socket = serverSocket.accept();
 			// client가 보낸 데이터 출력
 			in = socket.getInputStream();
+			bufReader = new BufferedReader(new InputStreamReader(in));
 			out = socket.getOutputStream();
-			BufferedReader bufReader = new BufferedReader(new InputStreamReader(in));
-			String message = bufReader.readLine();
-			System.out.println("Message : " + message);
-			// client에 데이터 전송
-			BufferedWriter bufWriter = new BufferedWriter(new OutputStreamWriter(out));
-			bufWriter.write("hello world");
-			bufWriter.newLine();
-			bufWriter.flush();
-			socket.close();
-			serverSocket.close();
-			bufReader.close();
-			bufWriter.close();
+			bufWriter = new BufferedWriter(new OutputStreamWriter(out));
+			while(true) {
+				String message = bufReader.readLine();
+				System.out.println("Message : " + message);
+				// client에 데이터 전송
+				if(sendResponse) {
+					bufWriter.write("hello world");
+					bufWriter.newLine();
+					bufWriter.flush();
+				}
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
+			if (bufReader != null)
+				try {
+					bufReader.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			if (bufWriter != null)
+				try {
+					bufWriter.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			if (in != null)
 				try {
 					in.close();

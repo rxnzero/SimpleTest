@@ -39,10 +39,19 @@ public class StringTest {
     	System.out.println( fileName +"=> "+ tableName);
 	}
 
+	public static void multiLangTest() {
+		try {
+			String multi = "¸Þ½ÃÁö";
+			byte[] bytes = multi.getBytes("utf-8");
+			System.out.println(new String(bytes, "encode"));
+		}
+		catch(Exception ex) {
+			ex.printStackTrace();
+		}
+	}
 	public static void main(String[] args) {
 		System.out.println( extractLayoutName("SRC_LAYOUT1.a.b.c" ));
 		System.out.println( extractLayoutName("max( SRC_LAYOUT2.a.b.c)") );
 		System.out.println( extractLayoutName("sub( max( SRC_LAYOUT3.a.b.c), 10, 5 )") );
 	}
-
 }

@@ -17,11 +17,26 @@ public class MulticastServer {
 
 		DatagramPacket packet = null;
 		MulticastSocket socket = null;
-		String ip = "224.128.1.5";
-		int port = 9006;
+		String ip = "230.0.0.1"; // "224.128.1.5";
+		int port = 4443; // 9006;
+		
+		if(args.length  == 1) {
+			ip = args[0];
+		}
+		
+		if(args.length  == 2) {
+			ip = args[0];
+			try {
+				port = Integer.parseInt(args[1]);
+			}
+			catch(Exception e) {
+				;
+			}
+		}
+		
 		try {
 			socket = new MulticastSocket();
-			System.out.println("서버 생성 성공. ip=" + ip + ", port=" + port);
+			System.out.println("Multicast Sender Init. ip=" + ip + ", port=" + port);
 
 			BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
@@ -34,13 +49,19 @@ public class MulticastServer {
 			InetAddress address = InetAddress.getByName(ip); // 멀티캐스트 방식으로 서버 주소를 설정함.
 
 			while (true) {
-				System.out.print("입력 : ");
+				System.out.print("Input : ");
 				String msg = reader.readLine();
 				if (msg == null) {
 					break;
 				}
+
 				packet = new DatagramPacket(msg.getBytes(), msg.getBytes().length, address, port);
 				socket.send(packet);
+				
+				if ("quit".equalsIgnoreCase(msg)) {
+					System.out.print("# quit test.");
+					break;
+				}
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

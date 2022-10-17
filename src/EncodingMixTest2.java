@@ -44,7 +44,5 @@ public class EncodingMixTest2 {
 		System.out.println();
 		System.out.println("eucBytes : " + new String(eucBytes, "euc-kr") );
 		System.out.println("utfBytes : " + new String(utfBytes, "utf-8") );
-		
 	}
-
 }

@@ -1,12 +1,12 @@
 package com.dhlee.string;
 
-import java.util.Spliterator;
-import java.util.regex.Matcher;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 
-public class JsonPerformanceTuning2 {
+public class JsonPerformanceTuning {
 
-	public JsonPerformanceTuning2() {
+	public JsonPerformanceTuning() {
 
 	}
 	public static final Pattern pattern = Pattern.compile("\\[([0-9]+)\\]");
@@ -22,10 +22,34 @@ public class JsonPerformanceTuning2 {
 //      System.out.println(String.format("%s : %s", xpath, itemPath));
         return itemPath;
     }
-
+	
+	private static String[] split(String source, char spliter) {
+    	List<String> list = new ArrayList<String>();
+    	CharSequence chars = source;
+    	int start = 0, end = 0;
+    	for(int i=0; i<chars.length(); i++) {
+    		if(chars.charAt(i) == spliter) {
+    			end = i;
+    			list.add(chars.subSequence(start, end).toString());
+    			start = end+1;
+    			i = i+1;
+    		}
+    	}
+    	
+    	if(end == 0) {
+    		list.add(chars.toString());
+    	}
+    	else {
+    		list.add(chars.subSequence(start, chars.length()).toString());
+    	}
+    	
+    	return (String[])list.toArray(new String[0]);
+    }
+	
 	public static String denomalizeXPath2(String xpath) {
         StringBuffer sb = new StringBuffer();
         String[] parts = xpath.split("\\"+FIELD_SEPARATOR);
+//        String[] parts = split(xpath, '.');
         for(int i=0; i<parts.length; i++) {
         	if(i == 0) {
         		sb.append(parts[i]);
@@ -47,9 +71,20 @@ public class JsonPerformanceTuning2 {
         return itemPath;
     }
 	
-//	denomalizeXPath  run  1,000,000 times : 2,672 ms
-//	denomalizeXPath2 run  1,000,000 times : 240 ms
+// 1. CRS72001S0_REQ2.Document[0].Amt[0]
+//	Sample Length : 34
+//	denomalizeXPath  run  1,000,000 times : 3,024 ms
+//	denomalizeXPath2 run  1,000,000 times : 219 ms
 	
+// 2. CRS72001S0_REQ2.Document[0].InData[0].InData[0].InData[0].InData[0].InData[0].InData[0].InData[0].InData[0].InData[0].InData[0].CuniqnoType[0]\
+//	Sample Length : 142
+//	denomalizeXPath  run  1,000,000 times : 11,844 ms
+//	denomalizeXPath2 run  1,000,000 times : 691 ms
+	
+// 3. CRS72001S0_REQ2.Document[0].그룹1[0].그룹2[0].그룹3[0].그룹4[0].그룹5[0].그룹6[0].그룹7[0].그룹8[0].그룹9[0].InData[0].CuniqnoType[0]
+//	Sample Length : 115
+//	denomalizeXPath  run  1,000,000 times : 7,995 ms
+//	denomalizeXPath2 run  1,000,000 times : 655 ms
 	public static void main(String[] argv) {
 //		CRS72001S0_REQ2 : CRS72001S0_REQ2
 //		CRS72001S0_REQ2.Document : CRS72001S0_REQ2.Document[0]
@@ -73,7 +108,13 @@ public class JsonPerformanceTuning2 {
 //		CRS72001S0_REQ2.Document.InData.CuniqnoType : CRS72001S0_REQ2.Document[0].InData[0].CuniqnoType[0]
 //		CRS72001S0_REQ2.Document.InData.Cuniqno : CRS72001S0_REQ2.Document[0].InData[0].Cuniqno[0]
 		int runs = 1000000;
-		String testStr = "CRS72001S0_REQ2.Document.AddInfo[2]";
+		String testStr = null;
+		testStr = "CRS72001S0_REQ2.Document[0].Amt[0]";
+//		testStr = "CRS72001S0_REQ2.Document[0].InData[0].InData[0].InData[0].InData[0].InData[0].InData[0].InData[0].InData[0].InData[0].InData[0].CuniqnoType[0]";
+//		testStr = "CRS72001S0_REQ2.Document[0].그룹1[0].그룹2[0].그룹3[0].그룹4[0].그룹5[0].그룹6[0].그룹7[0].그룹8[0].그룹9[0].InData[0].CuniqnoType[0]";
+		
+		
+		System.out.println(String.format("Sample Length : %d", testStr.length()) );		
 		long c = 0;
 		c = System.currentTimeMillis();
 		for(int i=0; i< runs; i++)

@@ -199,7 +199,7 @@ public class CheckStringPerformanceTest {
     
 	private static void testReplaceAsteriskToIndex() {	
 		int iter = 100000;
-		String instruction ="*abc[*].d*ef[*].ghi*) + (*jk[*].lm[*].no)";
+		String instruction ="*abc[*].d*ef[*].ghi*) + (*jk[*].lm[*].no";
 		String result = null;
 		long t = 0;
 		
@@ -305,7 +305,7 @@ public class CheckStringPerformanceTest {
 	public static void testPattern() throws Exception {
 		int iter = 1000000;
 		int intervalSecs = 1;
-		String message = "addedfunction(message.group1.group1.group1.group1.group1.group1.field +";
+		String message = "addedfunction(message.group1.group1.group1.group1.group1.group1.field)";
 //		message = "addedfunction.message.group1.group1.group1.group1.group1.group1.field +";
 		long t = 0; 
 		boolean check = false;
@@ -316,10 +316,11 @@ public class CheckStringPerformanceTest {
 		
 // too slow.
 //		>> Start iters : 1,000,000
-//		testPattern : 417-> false
-//		testSimpleTuning1 : 7-> false
-//		testSimpleTuning2 : 22-> false
-//		testSimpleTuning3: 15-> false
+//		testPattern : 438-> false
+//		testSimpleTuning0 : 4-> false
+//		testSimpleTuning1 : 10-> false
+//		testSimpleTuning2 : 24-> false
+//		testSimpleTuning3: 16-> false
 
 //		
 		t = System.currentTimeMillis();
@@ -328,6 +329,14 @@ public class CheckStringPerformanceTest {
 			check = testPattern(message);
 		}
 		System.out.println("testPattern : " +(System.currentTimeMillis() - t) + "-> " +check);
+		
+		// BEST
+		Thread.sleep(intervalSecs *1000);
+		t = System.currentTimeMillis();
+		for(int i=0; i<iter;i++) {
+			check = testSimpleTuning0(message);
+		}
+		System.out.println("testSimpleTuning0 : " +(System.currentTimeMillis() - t) + "-> " +check);
 		
 		// BEST
 		Thread.sleep(intervalSecs *1000);
@@ -363,6 +372,8 @@ public class CheckStringPerformanceTest {
 	}
 	
 	static char[] findChars = {'(', '+', ' '};
+	static char[] findChars0 = {')', '+', ' '};
+	
 	public static boolean testSimpleTuning1(String message) {
 		for(int i=0; i<findChars.length; i++) {
 			if(message.indexOf(findChars[i]) > -1) {
@@ -371,7 +382,17 @@ public class CheckStringPerformanceTest {
 		}
 		return true;
 	}
-
+	
+	public static boolean testSimpleTuning0(String message) {
+		if(message.charAt(message.length()-1) == ')') return false;
+		for(int i=0; i<findChars.length; i++) {
+			if(message.indexOf(findChars[i]) > -1) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
 	public static boolean testSimpleTuning2(String message) {
 		char[] chars = message.toCharArray();
 		for(int i=0; i<chars.length; i++) {

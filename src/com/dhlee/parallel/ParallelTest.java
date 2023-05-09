@@ -17,14 +17,14 @@ public class ParallelTest {
 	public static void main(String[] argv) {
 		ParallelTest test = new ParallelTest();
 		try {
-			test.oarallelExecute();
+			test.parallelExecute();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
-	public void oarallelExecute() throws Exception {
+	public void parallelExecute() throws Exception {
 		List<String> testSample = Arrays.asList("가", "나", "다", "라", "마", "바", "사", "후후", "1", "10", "100", "-100");
 		
 		// 4개의 Thread를 가진 ThreadPool생성

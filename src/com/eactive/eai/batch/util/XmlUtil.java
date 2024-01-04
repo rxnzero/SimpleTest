@@ -227,7 +227,7 @@ public class XmlUtil {
 	
 	public static void main(String args[]) {
 		try {
-//			testKcreditXML();
+			testKcreditXML();
 			testLayoutXML();
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -17,15 +17,16 @@ public class TripleDESTest {
     public static void main(String[] args) {
 
         String text = "kyle boon";
-
-        byte[] codedtext = new TripleDESTest().encrypt(text);
+        System.out.println(" origin :" + text);
+        
+        String codedtext = new TripleDESTest().encrypt(text);
         String decodedtext  = new TripleDESTest().decrypt(codedtext);
 
-        System.out.println(codedtext);
-        System.out.println(new String(decodedtext));
+        System.out.println("encoded :" + codedtext);
+        System.out.println("decoded :" + decodedtext);
     }
 
-    public byte[] encrypt(String message) {
+    public String encrypt(String message) {
         try {
             final MessageDigest md = MessageDigest.getInstance("md5");
             final byte[] digestOfPassword = md.digest("HG58YZ3CR9".getBytes("utf-8"));
@@ -42,9 +43,7 @@ public class TripleDESTest {
 
             final byte[] plainTextBytes = message.getBytes("utf-8");
             final byte[] cipherText = cipher.doFinal(plainTextBytes);
-            final String encodedCipherText = new sun.misc.BASE64Encoder().encode(cipherText);
-
-            return cipherText;    
+            return new sun.misc.BASE64Encoder().encode(cipherText);
         }
         catch (java.security.InvalidAlgorithmParameterException e) { System.out.println("Invalid Algorithm"); }
         catch (javax.crypto.NoSuchPaddingException e) { System.out.println("No Such Padding"); }
@@ -57,7 +56,7 @@ public class TripleDESTest {
         return null;
     }
 
-    public String decrypt(byte[] message) {
+    public String decrypt(String message) {
         try
         {
             final MessageDigest md = MessageDigest.getInstance("md5");
@@ -73,10 +72,10 @@ public class TripleDESTest {
             final Cipher decipher = Cipher.getInstance("DESede/CBC/PKCS5Padding");
             decipher.init(Cipher.DECRYPT_MODE, key, iv);
 
-            //final byte[] encData = new sun.misc.BASE64Decoder().decodeBuffer(message);
-            final byte[] plainText = decipher.doFinal(message);
+            final byte[] encData = new sun.misc.BASE64Decoder().decodeBuffer(message);
+            final byte[] plain = decipher.doFinal(encData);
 
-            return plainText.toString();            
+            return new String(plain);
         }
         catch (java.security.InvalidAlgorithmParameterException e) { System.out.println("Invalid Algorithm"); }
         catch (javax.crypto.NoSuchPaddingException e) { System.out.println("No Such Padding"); }

@@ -37,7 +37,7 @@ public class AESSample {
 		return new String(encoded);
 	}
 
-	public static String decypt(String strDecryptKey, String strData)
+	public static String decrypt(String strDecryptKey, String strData)
 			throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException,
 			InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
 		strDecryptKey = strDecryptKey.substring(0, 16);
@@ -66,12 +66,13 @@ public class AESSample {
 	}
 
 	public static void main(String[] args) {
-		String key = "Bar12345Bar12345"; // 128 bit key
-		String enc;
+		String key = "Bar12345Bar12345";
+		String text = "Hello AES ÇÑ±Û";
 		try {
-			enc = encrypt(key, "Hello AES");
+			System.out.println(text);
+			String enc = encrypt(key, text);
 			System.out.println(enc);
-			System.out.println(decypt(key, enc));
+			System.out.println(decrypt(key, enc));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -1,3 +1,4 @@
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -9,66 +10,51 @@ public class StringTest {
 	public StringTest() {
 		// TODO Auto-generated constructor stub
 	}
-	
-	
+
 	public static String extractLayoutName(String path) {
-		
+
 		String layoutName = null;
 		int sPos = 0;
 		int ePos = 0;
-		if(path == null || path.length()  == 0)
+		if (path == null || path.length() == 0)
 			return null;
-		
+
 		sPos = path.lastIndexOf("(");
-		if(sPos < 0) {
+		if (sPos < 0) {
 			sPos = 0;
+		} else if (sPos > 0) {
+			sPos = sPos + 1;
 		}
-		else if(sPos > 0) {
-			sPos = sPos+1;
-		}
-		
+
 		ePos = path.indexOf(".");
-		if(ePos < 0) sPos = 0;
-		
-		if(ePos > 0 && ePos > sPos) {
+		if (ePos < 0)
+			sPos = 0;
+
+		if (ePos > 0 && ePos > sPos) {
 			layoutName = path.substring(sPos, ePos);
 			layoutName = layoutName.trim();
 		}
 		return layoutName;
 	}
-	
+
 	public static void spiltTest() {
 		String fileName = "abc.txt";
 		String[] temp = fileName.split("\\."); // fileName.split("[.]");
-    	String tableName = temp[0]; 
-    	System.out.println( fileName +"=> "+ tableName);
+		String tableName = temp[0];
+		System.out.println(fileName + "=> " + tableName);
 	}
 
 	public static void multiLangTest() {
 		try {
-			String multi = "∏ﬁΩ√¡ˆ";
+			String multi = "Î©îÏãúÏßÄ";
 			byte[] bytes = multi.getBytes("utf-8");
 			System.out.println(new String(bytes, "encode"));
-		}
-		catch(Exception ex) {
+		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 	}
-	public static void main(String[] args) {
-//		System.out.println( extractLayoutName("SRC_LAYOUT1.a.b.c" ));
-//		System.out.println( extractLayoutName("max( SRC_LAYOUT2.a.b.c)") );
-//		System.out.println( extractLayoutName("sub( max( SRC_LAYOUT3.a.b.c), 10, 5 )") );
-		
-//		HashMap map = new  HashMap();
-//		String value = null;
-//		Iterator it = map.values().iterator();
-//		if(it.hasNext()) value = (String) it.next();
-//		
-//		System.out.println(value);
-//		System.out.println(
-//		String.format("%s - Current adapter stopped forcely %s, skip adapter status change to %s", "TestAdapter", true, true)
-//		);
-		
+
+	public static void mapTest() {
 		try {
 			ConcurrentHashMap<String, String> monitors = new ConcurrentHashMap<>();
 			
@@ -98,5 +84,42 @@ public class StringTest {
 		}
 		
 		System.out.println("Done...");
+	}
+	
+	public static String encodeCharset(String msg, String charsetName) throws UnsupportedEncodingException {
+		return new String(msg.getBytes(charsetName), charsetName);		
+	}
+	
+	public static void main(String[] args) {
+//		System.out.println( extractLayoutName("SRC_LAYOUT1.a.b.c" ));
+//		System.out.println( extractLayoutName("max( SRC_LAYOUT2.a.b.c)") );
+//		System.out.println( extractLayoutName("sub( max( SRC_LAYOUT3.a.b.c), 10, 5 )") );
+
+//		HashMap map = new  HashMap();
+//		String value = null;
+//		Iterator it = map.values().iterator();
+//		if(it.hasNext()) value = (String) it.next();
+//		
+//		System.out.println(value);
+//		System.out.println(
+//		String.format("%s - Current adapter stopped forcely %s, skip adapter status change to %s", "TestAdapter", true, true)
+//		);
+		
+		String code = "ÎçîÏÉæ";
+		
+		String charset = "ms949";
+		System.out.println(code);
+		try {
+			charset = "ms949";
+			System.out.println(String.format("%s [%s]", charset, encodeCharset(code, charset)) );
+			charset = "euc-kr";
+			System.out.println(String.format("%s [%s]", charset, encodeCharset(code, charset)) );
+			charset = "utf-8";
+			System.out.println(String.format("%s [%s]", charset, encodeCharset(code, charset)) );
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		
+		
 	}
 }

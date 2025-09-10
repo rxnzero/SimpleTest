@@ -15,7 +15,7 @@ public class GeneticAlgorithm {
             population = evolvePopulation(population);
             generation++;
 
-//            System.out.println("Generation " + generation + ": " + String.valueOf(population));
+            System.out.println("Generation " + generation + ": " + String.valueOf(population));
         }
 
         System.out.println("Solution found in generation " + generation + ": " + String.valueOf(population));
